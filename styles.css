@@ -65,8 +65,10 @@ body {
     repeating-conic-gradient(#e9e5f3 0% 25%, #ffffff 0% 50%) 50% / 24px 24px;
   max-width: 380px;
   margin: 0 auto;
+  position: relative;
 }
-#cv { display: block; width: 100%; height: auto; touch-action: none; cursor: grab; }
+.src-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none; }
+#cv { position: relative; z-index: 1; display: block; width: 100%; height: auto; touch-action: none; cursor: grab; }
 #cv:active { cursor: grabbing; }
 .hint { margin: 8px 0; color: var(--muted); font-size: 14px; }
 .sound-label { margin: 8px 0 0; font-weight: 800; color: var(--accent); }

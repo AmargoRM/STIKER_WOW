@@ -61,6 +61,7 @@
   async function play() {
     stopPlay();
     ensureAudio();
+    try { await actx.resume(); } catch (e) { /* nada */ }
     const buf = await currentBuffer();
     const dur = state.duration;
     const startAt = actx.currentTime + 0.08;
@@ -285,8 +286,8 @@
     v.setAttribute('playsinline', '');
     v.loop = true;
     v.preload = 'auto';
-    v.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;left:0;top:0';
-    document.body.appendChild(v);
+    v.className = 'src-video';
+    document.querySelector('.canvas-wrap').appendChild(v);
     v.src = URL.createObjectURL(f);
     v.addEventListener('loadeddata', () => {
       state.video = v;
