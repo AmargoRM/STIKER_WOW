@@ -10,7 +10,7 @@
     mediaType: 'emoji', img: null, video: null, emoji: '😂',
     zoom: 1, offX: 0, offY: 0, fit: 'cover', videoStart: 0,
     topText: '', bottomText: '', textColor: '#ffffff', textSize: 58,
-    shape: 'rounded', border: true, bg: '#ffd23f', anim: 'beat',
+    shape: 'square', border: false, bg: '#ffffff', anim: 'none',
     soundKind: 'none', soundId: null, soundName: '',
     fileBuffer: null, fileName: '', micBuffer: null, videoBuffer: null,
     soundStart: 0, duration: 3, volume: 1,
@@ -135,7 +135,7 @@
   }
   function animTransform(c, t, lv) {
     let s = 1, r = 0, dx = 0, dy = 0;
-    const base = state.anim === 'none' ? 1 : 0.9;
+    const base = 1;
     switch (state.anim) {
       case 'pulse': s = 1 + 0.07 * Math.sin(t * Math.PI * 4); break;
       case 'beat': s = 1 + lv * 0.28; break;
