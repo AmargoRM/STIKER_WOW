@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sticker WOW</title>
+  <meta name="description" content="Creá stickers con sonido para WhatsApp: foto, video o emoji + sonido de meme o tu propio audio.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <h1>🔊 Sticker <span>WOW</span></h1>
+    <p>Stickers con sonido para WhatsApp. Elegí imagen, texto, sonido… ¡y listo!</p>
+  </header>
+
+  <main class="layout">
+    <section class="preview-col">
+      <div class="preview-card">
+        <div class="canvas-wrap">
+          <canvas id="cv" width="512" height="512" aria-label="Vista previa del sticker"></canvas>
+        </div>
+        <p class="hint">👆 Arrastrá la imagen para moverla</p>
+        <button id="btnPlay" class="btn big play">▶ Escuchar</button>
+        <p id="soundLabel" class="sound-label">Sin sonido</p>
+      </div>
+    </section>
+
+    <section class="controls-col">
+      <div class="card">
+        <h2><span class="num">1</span> Imagen o video</h2>
+        <div class="row-btns">
+          <label class="btn"><input type="file" id="inImage" accept="image/*" hidden>🖼️ Foto</label>
+          <label class="btn"><input type="file" id="inVideo" accept="video/*" hidden>🎞️ Video</label>
+          <button class="btn" id="btnEmoji" type="button">😂 Emoji</button>
+        </div>
+        <div id="emojiBox" class="sub">
+          <input id="emojiInput" class="emoji-input" maxlength="12" value="😂" aria-label="Emoji">
+          <div class="emoji-quick" id="emojiQuick"></div>
+        </div>
+        <label class="field">Tamaño <input type="range" id="zoom" min="0.3" max="3" step="0.01" value="1"></label>
+        <div class="field seg" id="fitSeg">
+          <span>Ajuste</span>
+          <button type="button" data-v="cover" class="on">Llenar</button>
+          <button type="button" data-v="contain">Completa</button>
+        </div>
+        <label class="field hidden" id="videoStartField">Empieza en el segundo <b id="videoStartVal">0</b>
+          <input type="range" id="videoStart" min="0" max="1" step="0.1" value="0">
+        </label>
+      </div>
+
+      <div class="card">
+        <h2><span class="num">2</span> Texto</h2>
+        <input id="topText" class="text-in" placeholder="Texto de arriba (opcional)">
+        <input id="bottomText" class="text-in" placeholder="Texto de abajo (opcional)">
+        <div class="field-row">
+          <label class="field">Color <input type="color" id="textColor" value="#ffffff"></label>
+          <label class="field grow">Tamaño <input type="range" id="textSize" min="24" max="110" value="58"></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="num">3</span> Estilo</h2>
+        <div class="field seg" id="shapeSeg">
+          <span>Forma</span>
+          <button type="button" data-v="square">⬛ Cuadrado</button>
+          <button type="button" data-v="rounded" class="on">▢ Redondeado</button>
+          <button type="button" data-v="circle">⚪ Círculo</button>
+        </div>
+        <div class="field-row">
+          <label class="field">Fondo <input type="color" id="bg" value="#ffd23f"></label>
+          <label class="field check"><input type="checkbox" id="border" checked> Borde blanco</label>
+        </div>
+        <label class="field">Movimiento
+          <select id="anim">
+            <option value="none">Quieto</option>
+            <option value="beat" selected>💓 Late con el sonido</option>
+            <option value="pulse">Pulso</option>
+            <option value="shake">Temblor</option>
+            <option value="bounce">Rebote</option>
+            <option value="wobble">Bamboleo</option>
+            <option value="zoom">Zoom dramático</option>
+            <option value="spin">Girar</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="card">
+        <h2><span class="num">4</span> Sonido</h2>
+        <div class="tabs" id="soundTabs">
+          <button type="button" data-tab="lib" class="on">🎵 Biblioteca</button>
+          <button type="button" data-tab="file">📁 Subir</button>
+          <button type="button" data-tab="mic">🎙️ Grabar</button>
+          <button type="button" data-tab="video">🎞️ Del video</button>
+          <button type="button" data-tab="none">🔇 Ninguno</button>
+        </div>
+        <div class="tab-panel" data-panel="lib">
+          <div class="sound-grid" id="soundGrid"></div>
+          <p class="small">Tocá un sonido para escucharlo. Para usar una canción o un meme famoso, bajalo a tu celular y subilo en “📁 Subir”.</p>
+        </div>
+        <div class="tab-panel hidden" data-panel="file">
+          <label class="btn wide"><input type="file" id="inAudio" accept="audio/*,video/*" hidden>📁 Elegir audio o video (MP3, M4A, OGG, MP4…)</label>
+          <p class="small" id="fileName">Se usa solo el sonido del archivo.</p>
+        </div>
+        <div class="tab-panel hidden" data-panel="mic">
+          <button type="button" class="btn wide" id="btnMic">⏺️ Grabar mi voz (máx. 10 s)</button>
+          <p class="small" id="micStatus">Te va a pedir permiso para usar el micrófono.</p>
+        </div>
+        <div class="tab-panel hidden" data-panel="video">
+          <p class="small" id="videoSoundMsg">Primero subí un video en el paso 1.</p>
+        </div>
+        <div class="tab-panel hidden" data-panel="none">
+          <p class="small">El sticker no tendrá sonido.</p>
+        </div>
+
+        <div id="trim" class="sub">
+          <label class="field" id="soundStartField">Empezar el sonido en <b id="soundStartVal">0.0 s</b>
+            <input type="range" id="soundStart" min="0" max="1" step="0.05" value="0">
+          </label>
+          <label class="field">Duración del sticker <b id="durationVal">3.0 s</b>
+            <input type="range" id="duration" min="0.5" max="10" step="0.1" value="3">
+          </label>
+          <label class="field">Volumen <b id="volumeVal">100 %</b>
+            <input type="range" id="volume" min="0" max="2" step="0.05" value="1">
+          </label>
+        </div>
+      </div>
+
+      <div class="card final">
+        <h2><span class="num">5</span> Crear</h2>
+        <button type="button" id="btnMakeVideo" class="btn big wa">🎬 Crear sticker con sonido</button>
+        <button type="button" id="btnMakeSticker" class="btn big ghost">🖼️ Sticker sin sonido</button>
+        <div id="progress" class="progress hidden"><div id="progressBar"></div></div>
+        <div id="result"></div>
+        <details class="info">
+          <summary>¿Cómo lo uso en WhatsApp?</summary>
+          <p><b>WhatsApp no deja poner sonido dentro de un sticker.</b> Por eso “Sticker con sonido” crea un <b>video cuadrado y corto</b> que se reproduce con sonido en el chat.</p>
+          <ol>
+            <li>Tocá <b>🎬 Crear sticker con sonido</b>.</li>
+            <li>En el celular tocá <b>📲 Enviar</b> y elegí WhatsApp. En la computadora tocá <b>⬇️ Descargar</b> y adjuntalo en WhatsApp como video.</li>
+            <li>Guardalo en tu galería para reenviarlo rápido cuando quieras.</li>
+          </ol>
+          <p><b>Sticker sin sonido:</b> en WhatsApp Web o de escritorio, tocá 📎 → <i>Sticker</i> y subí el archivo. En el celular, abrilo con una app de stickers (por ejemplo “Sticker.ly” o “Sticker Maker”).</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">Todo se procesa en tu dispositivo: tus fotos, videos y audios no se suben a ningún servidor.</footer>
+
+  <script src="sounds.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
